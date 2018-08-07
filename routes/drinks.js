@@ -8,7 +8,6 @@ const Drink = require('../models/drinks');
 //TEST GET ENDPOINT
 router.get('/', (req, res, next) => {
     const { search } = req.query;
-    console.log(search);
     
     if(search){
         const re = new RegExp(search, 'i');
@@ -16,7 +15,6 @@ router.get('/', (req, res, next) => {
 
         Drink.find(filter)
         .then(drinks => {
-            console.log(drinks);
             res.json(drinks);
         })
         .catch(err => next(err));
