@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Daiquiri",
+        "method": "shaken",
+        "eggWhite": false,
+        "ingredients": ["2 oz Rum", "3/4 oz Lime", "3/4 oz Simple Syrup"],
+        "glass": "coupe",
+        "instructions": "Combine, shake, fine strain into coupe, no garnish"
+    },
+    {
+        "name": "Corpse Reviver #2",
+        "method": "shaken",
+        "eggWhite": false,
+        "ingredients": ["3/4 oz London Dry Gin", "3/4 oz Cointreau", "3/4 oz Lilet Blanc", "3/4 oz Lemon"],
+        "glass": "coupe",
+        "instructions": "rinse glass with a few drops absinthe, shake, fine strain, no garnish"
+    },
+    {
+        "name": "Manhattan",
+        "method": "stirred",
+        "eggWhite": false,
+        "ingredients": ["2 dashes Angostura Bitters", "3/4 oz Sweet Vermouth", "2 1/2 oz Rye Whiskey"],
+        "glass": "coupe",
+        "instructions": "combine, stir, strain into coupe with cherry and or lemon twist garnish"
+    },
+    {
+        "name": "Pisco Sour",
+        "method": "shaken",
+        "eggWhite": true,
+        "ingredients": ["2 oz Pisco", "1/2 oz Lemon", "1/2 oz Lime", "3/4 oz Simple Syrup", "1 egg white"],
+        "glass": "coupe",
+        "instructions": "combine, dry shake, regular shake, fine strain into coupe, bitter design garnish"
+    },
+    {
+        "name": "Vesper",
+        "method": "stirred",
+        "eggWhite": false,
+        "ingredients": ["1 1/2 Plymouth Gin", "3/4 oz Vodka", "1/2 oz Cochi Americano"],
+        "glass": "coupe",
+        "instructions": "combine, stir, strain into coupe, lemon twist garnish"
+    }
+]
