@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const drinkSchema = new mongoose.Schema({
     name: { type: String, required: true },
     method: { type: String, required: true },
-    eggWhite: { type: Boolean, required: true },
+    eggWhite: { type: String, required: true },
     ingredients: [String],
     glass: String,
     instructions: String
