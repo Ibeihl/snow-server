@@ -4,19 +4,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Drink = require('../models/drinks');
+const User = require('../users/models');
 
 
 
 router.get('/', (req, res, next) => {
     const { search } = req.query;
-    console.log(req.query); 
+    console.log(req.query);
 
     if (search) {
         const re = new RegExp(search, 'i');
-        let filter = { 'name': re }
+        let filter = {
+            $or: [{ 'name': re }, { 'ingredients': re },
+            { 'glass': re }, { 'instructions': re }]
+        }
 
         Drink.find(filter)
-            .sort({name: 'asc'})
+            .sort({ name: 'asc' })
             .then(drinks => {
                 res.json(drinks);
             })
@@ -31,14 +35,34 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-    const { name, method, eggWhite, glass, ingredients, instructions } = req.body;
-    const newDrink = {name, method, eggWhite, glass, ingredients, instructions};
+    const { name, method, eggWhite, glass, ingredients, instructions, user } = req.body;
+    const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user };
 
     Drink.create(newDrink)
         .then(result => {
             res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
         })
         .catch(err => next(err));
+
+})
+
+router.delete('/:id', (req, res, next) => {
+    const { id } = req.params;
+
+    /***** Never trust users - validate input *****/
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        const err = new Error('The `id` is not valid');
+        err.status = 400;
+        return next(err);
+    }
+
+    Drink.findByIdAndRemove(id)
+        .then(() => {
+            res.sendStatus(204);
+        })
+        .catch(err => {
+            next(err);
+        });
 
 })
 

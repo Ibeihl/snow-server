@@ -8,6 +8,7 @@ const drinkSchema = new mongoose.Schema({
     eggWhite: { type: String, required: true },
     ingredients: [String],
     glass: String,
+    user: String,
     instructions: String
 });
 
