@@ -4,11 +4,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Drink = require('../models/drinks');
-const User = require('../users/models');
+// const User = require('../users/models');
+const passport = require('passport');
 
+// router.use('/', passport.authenticate('jwt', {session: false, failWithError: true }));
+const jwtAuth = passport.authenticate('jwt', {session: false, failWithError: true });
 
-
-router.get('/', (req, res, next) => {
+router.get('/', jwtAuth, (req, res, next) => {
     const { search } = req.query;
     console.log(req.query);
 
