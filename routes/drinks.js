@@ -8,21 +8,26 @@ const Drink = require('../models/drinks');
 const passport = require('passport');
 
 // router.use('/', passport.authenticate('jwt', {session: false, failWithError: true }));
-const jwtAuth = passport.authenticate('jwt', {session: false, failWithError: true });
+const jwtAuth = passport.authenticate('jwt', { session: false, failWithError: true });
 
 router.get('/', jwtAuth, (req, res, next) => {
-    const { search } = req.query;
+    const { search, user } = req.query;
     console.log(req.query);
 
     if (search) {
         const re = new RegExp(search, 'i');
         let filter = {
-            $or: [{ 'name': re }, { 'ingredients': re },
-            { 'glass': re }, { 'instructions': re }]
+            $and: [
+                { $or: [{ 'user': user }, { 'user': 'classic' }] },
+                {
+                    $or: [{ 'name': re }, { 'ingredients': re },
+                    { 'glass': re }, { 'instructions': re }]
+                }
+            ]
         }
 
         Drink.find(filter)
-            .sort({ name: 'asc' })
+            .sort({ 'name': 'asc' })
             .then(drinks => {
                 res.json(drinks);
             })
@@ -37,7 +42,7 @@ router.get('/', jwtAuth, (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-    const { name, method, eggWhite, glass, ingredients, instructions, user } = req.body;
+    const { name, method, eggWhite, glass, ingredients, instructions, user } = req.body.newDrink;
     const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user };
 
     Drink.create(newDrink)
