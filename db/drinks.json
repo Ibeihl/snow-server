@@ -41,7 +41,7 @@
         ],
         "glass": "coupe",
         "user": "classic",
-        "favorites": [],
+        "favorites": ["ianuser"],
         "instructions": "combine, stir, strain into coupe with cherry and or lemon twist garnish",
         "photo": "https://cdn.liquor.com/wp-content/uploads/2018/05/10144903/Manhattan-720x720-recipe.jpg"
     },

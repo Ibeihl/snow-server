@@ -12,7 +12,7 @@ const jwtAuth = passport.authenticate('jwt', { session: false, failWithError: tr
 
 router.get('/', jwtAuth, (req, res, next) => {
     const { search, user } = req.query;
-    console.log(req.query);
+    // console.log(req.query);
 
     if (search) {
         const re = new RegExp(search, 'i');
@@ -34,6 +34,7 @@ router.get('/', jwtAuth, (req, res, next) => {
             .catch(err => next(err));
     } else {
         Drink.find()
+            .sort({ 'name': 'asc' })
             .then(drinks => {
                 res.json(drinks);
             })
@@ -41,9 +42,11 @@ router.get('/', jwtAuth, (req, res, next) => {
     }
 })
 
-router.post('/', (req, res, next) => {
+//ADD a new drink
+router.post('/', jwtAuth, (req, res, next) => {
     const { name, method, eggWhite, glass, ingredients, instructions, user } = req.body.newDrink;
     const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user };
+    newDrink.favorites = [];
 
     Drink.create(newDrink)
         .then(result => {
@@ -53,7 +56,47 @@ router.post('/', (req, res, next) => {
 
 })
 
-router.delete('/:id', (req, res, next) => {
+//add favorite
+router.put('/:id', jwtAuth, (req, res, next) => {
+    const id = req.params.id
+    const { user, favorite } = req.body;
+    /***** Never trust users - validate input *****/
+     if (!mongoose.Types.ObjectId.isValid(id)) {
+        const err = new Error('The `id` is not valid');
+        err.status = 400;
+        return next(err);
+    }
+    if (favorite){
+        let removeFav = {
+             $pull: {favorites: { $in: user}}
+        }
+        Drink.findByIdAndUpdate(id, removeFav, { new: true })
+        .then(result => {
+          if (result) {
+            res.json(result);
+          } else {
+            next();
+          }
+        })
+    } else {
+        let addFav = {
+            $push: { favorites: user }
+        };
+        Drink.findByIdAndUpdate(id, addFav, { new: true })
+        .then(result => {
+          if (result) {
+            res.json(result);
+          } else {
+            next();
+          }
+        })
+    }
+
+})
+
+
+//delete
+router.delete('/:id', jwtAuth, (req, res, next) => {
     const { id } = req.params;
 
     /***** Never trust users - validate input *****/
@@ -72,20 +115,5 @@ router.delete('/:id', (req, res, next) => {
         });
 
 })
-
-//   router.get('/', (req, res, next) => {
-//     const { search } = req.query;
-//     console.log(search);
-
-//     if(search){
-//       const drinkResults = drinks.filter(drink => drink.includes(search))
-//       return res.json(drinkResults)
-//     }
-
-//     res.json(drinks);
-//   })
-
-
-
 
 module.exports = router;
