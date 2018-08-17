@@ -3,11 +3,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const Drink = require('../models/drinks');
-// const User = require('../users/models');
+const Drink = require('./models');
 const passport = require('passport');
 
-// router.use('/', passport.authenticate('jwt', {session: false, failWithError: true }));
 const jwtAuth = passport.authenticate('jwt', { session: false, failWithError: true });
 
 router.get('/', jwtAuth, (req, res, next) => {
