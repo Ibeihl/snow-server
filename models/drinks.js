@@ -10,7 +10,8 @@ const drinkSchema = new mongoose.Schema({
     glass: String,
     user: String,
     favorites: [String],
-    instructions: String
+    instructions: String,
+    photo: String
 });
 
 drinkSchema.set('toObject', {

@@ -50,8 +50,8 @@ router.get('/', jwtAuth, (req, res, next) => {
 
 //ADD a new drink
 router.post('/', jwtAuth, (req, res, next) => {
-    const { name, method, eggWhite, glass, ingredients, instructions, user } = req.body.newDrink;
-    const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user };
+    const { name, method, eggWhite, glass, ingredients, instructions, user, photo } = req.body.newDrink;
+    const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user, photo };
     newDrink.favorites = [];
 
     Drink.create(newDrink)

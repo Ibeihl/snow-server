@@ -5,7 +5,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
 
-const { PORT, CLIENT_ORIGIN, MONGODB_URI } = require('./config');
+const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
 const drinksRouter = require('./routes/drinks');
@@ -60,39 +60,20 @@ app.use((err, req, res, next) => {
   }
 });
 
-// function runServer(port = PORT) {
-//   const server = app
-//     .listen(port, () => {
-//       console.info(`App listening on port ${server.address().port}`);
-//     })
-//     .on('error', err => {
-//       console.error('Express failed to start');
-//       console.error(err);
-//     });
-// }
-
-// if (require.main === module) {
-//   dbConnect();
-//   runServer();
-// }
-
-// Listen for incoming connections
-if (process.env.NODE_ENV !== 'test') {
-  // Connect to DB and Listen for incoming connections
-  mongoose.connect(MONGODB_URI)
-    .then(instance => {
-      const conn = instance.connections[0];
-      console.info(`Connected to: mongodb://${conn.host}:${conn.port}/${conn.name}`);
+function runServer(port = PORT) {
+  const server = app
+    .listen(port, () => {
+      console.info(`App listening on port ${server.address().port}`);
     })
-    .catch(err => {
+    .on('error', err => {
+      console.error('Express failed to start');
       console.error(err);
     });
+}
 
-  app.listen(PORT, function () {
-    console.info(`Server listening on ${this.address().port}`);
-  }).on('error', err => {
-    console.error(err);
-  });
+if (require.main === module) {
+  dbConnect();
+  runServer();
 }
 
 module.exports = { app };

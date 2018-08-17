@@ -5,7 +5,6 @@ require('dotenv').config();
 module.exports = {
   PORT: process.env.PORT || 8080,
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
-  MONGODB_URI: process.env.MONGODB_URI || 'mongodb://localhost/cocktails',
   DATABASE_URL:
         process.env.DATABASE_URL || 'mongodb://localhost/cocktails',
   TEST_DATABASE_URL:
