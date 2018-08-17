@@ -36,11 +36,14 @@ app.use(
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
+//serve static page
+// app.use(express.static(???))
+
 //mount routers
 app.use('/api/drinks', drinksRouter);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
-app.use(passport.authenticate('jwt', {session: false, failWithError: true }))
+// app.use(passport.authenticate('jwt', {session: false, failWithError: true }))
 
 // Custom 404 Not Found route handler
 app.use((req, res, next) => {
