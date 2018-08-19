@@ -11,5 +11,6 @@ module.exports = {
         process.env.TEST_DATABASE_URL ||
         'mongodb://localhost/test-cocktails',
   JWT_SECRET: process.env.JWT_SECRET,
-  JWT_EXPIRY: process.env.JWT_EXPIRY || '7d'
+  JWT_EXPIRY: process.env.JWT_EXPIRY || '7d',
+  COCKTAIL_KEY: process.env.REACT_APP_COCKTAIL_KEY
 };
