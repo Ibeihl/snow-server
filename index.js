@@ -18,12 +18,8 @@ const app = express();
 //parse request body
 app.use(express.json());
 
-//morgan logger middleware
-app.use(
-  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
-    skip: (req, res) => process.env.NODE_ENV === 'test'
-  })
-);
+
+console.log(CLIENT_ORIGIN);
 
 //cross origin middleware
 app.use(
@@ -31,6 +27,20 @@ app.use(
     origin: CLIENT_ORIGIN
   })
 );
+
+//morgan logger middleware
+app.use(
+  morgan(process.env.NODE_ENV === 'production' ? 'common' : 'dev', {
+    skip: (req, res) => process.env.NODE_ENV === 'test'
+  })
+);
+
+
+app.use(function(req, res, next) {
+  res.header(“Access-Control-Allow-Origin”, “*”);
+  res.header(“Access-Control-Allow-Headers”, “Origin, X-Requested-With, Content-Type, Accept”);
+  next();
+ });
 
 //auth strategies
 passport.use(localStrategy);
