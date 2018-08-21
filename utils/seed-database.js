@@ -2,14 +2,14 @@
 
 const mongoose = require('mongoose');
 
-const { MONGODB_URI } = require('../config');
+const { DATABASE_URL } = require('../config');
 
 const Drink = require('../models/drinks');
 
 const seedDrinks = require('../db/seed/drinks');
 
-console.log(`Connecting to mongodb at ${MONGODB_URI}`);
-mongoose.connect(MONGODB_URI)
+console.log(`Connecting to mongodb at ${DATABASE_URL}`);
+mongoose.connect(DATABASE_URL)
   .then(() => {
     console.info('Dropping Database');
     return mongoose.connection.db.dropDatabase();

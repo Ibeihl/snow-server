@@ -52,6 +52,16 @@ router.post('/', jwtAuth, (req, res, next) => {
     const newDrink = { name, method, eggWhite, glass, ingredients, instructions, user, photo };
     newDrink.favorites = [];
 
+    // const requiredFields = [ 'name', 'method', 'eggWhite', 'glass', 'ingredients',
+    //     'instructions', 'user' ];
+    // const missingField = requiredFields.find(field => !(field in req.body.newDrink));
+
+    // if (missingField) {
+    //     const err = new Error(`Missing '${missingField}' in request body`);
+    //     err.status = 422;
+    //     return next(err);
+    // }
+
     Drink.create(newDrink)
         .then(result => {
             res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
@@ -64,7 +74,7 @@ router.post('/', jwtAuth, (req, res, next) => {
 router.put('/:id', jwtAuth, (req, res, next) => {
     const id = req.params.id
     const { user, favorite } = req.body;
-    console.log(req.body);
+
     /***** Never trust users - validate input *****/
     if (!mongoose.Types.ObjectId.isValid(id)) {
         const err = new Error('The `id` is not valid');
