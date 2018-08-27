@@ -144,4 +144,12 @@ router.get('/', (req, res) => {
     .catch(err => res.status(500).json({message: 'Internal server error'}));
 });
 
+router.put('/:username', (req, res, next) => {
+  const username = req.params.username;
+  const { skiArea } = req.body
+  console.log(skiArea);
+  User.findByIdAndUpdate({username})
+
+})
+
 module.exports = {router};

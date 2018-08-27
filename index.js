@@ -7,7 +7,6 @@ const passport = require('passport');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-const drinksRouter = require('./drinks/router');
 
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
@@ -17,9 +16,6 @@ const app = express();
 
 //parse request body
 app.use(express.json());
-
-
-console.log(CLIENT_ORIGIN);
 
 //cross origin middleware
 app.use(
@@ -50,7 +46,6 @@ passport.use(jwtStrategy);
 // app.use(express.static(???))
 
 //mount routers
-app.use('/api/drinks', drinksRouter);
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
 // app.use(passport.authenticate('jwt', {session: false, failWithError: true }))
