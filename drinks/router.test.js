@@ -56,6 +56,7 @@ describe('Cocktail Buddy API - Drinks', function () {
         chai.request(app).get('/api/drinks').set('Authorization', `Bearer ${token}`)
       ])
         .then(([data, res]) => {
+            
             console.log(res.status);
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -136,9 +137,17 @@ describe('Cocktail Buddy API - Drinks', function () {
     });
 
     it('should return an error when given a duplicate name', function () {
-      return Folder.findOne({ userId: user.id })
+      return Drink.findOne()
         .then(data => {
-          const newItem = { name: data.name };
+          const newItem = { 
+              name: data.name,
+              method: 'shaken',
+              eggWhite: 'no',
+              ingredients: [ 'liquor' ],
+              user: 'aUser',
+              instructions: 'mix it up',
+              glass: 'coupe'
+             };
           return chai.request(app).post('/api/drinks').set('Authorization', `Bearer ${token}`).send(newItem);
         })
         .then(res => {
@@ -151,34 +160,35 @@ describe('Cocktail Buddy API - Drinks', function () {
 
   });
 
-  describe('PUT /api/folders/:id', function () {
+  describe('PUT /api/drinks/:id', function () {
 
-    it('should update the folder', function () {
-      const updateItem = { name: 'Updated Name' };
+    it('should add favorite to the drink', function () {
+      const updateItem = {
+          user: 'username'
+      };
+
       let data;
-      return Folder.findOne({ userId: user.id })
+      return Drink.findOne()
         .then(_data => {
           data = _data;
-          return chai.request(app).put(`/api/folders/${data.id}`).set('Authorization', `Bearer ${token}`).send(updateItem);
+          return chai.request(app).put(`/api/drinks/${data.id}`).set('Authorization', `Bearer ${token}`).send(updateItem);
         })
         .then(function (res) {
           expect(res).to.have.status(200);
           expect(res).to.be.json;
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('id', 'name', 'createdAt', 'updatedAt', 'userId');
+          expect(res.body).to.have.all.keys('id', 'name', 'method', 'eggWhite', 'user', 'ingredients',
+           'instructions', 'favorites', 'glass', 'photo');
           expect(res.body.id).to.equal(data.id);
-          expect(res.body.name).to.equal(updateItem.name);
-          expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
-          // expect item to have been updated
-          expect(new Date(res.body.updatedAt)).to.greaterThan(data.updatedAt);
+          expect(res.body.favorites).to.eql(['username']);
         });
     });
 
 
     it('should respond with a 400 for an invalid id', function () {
-      const updateItem = { name: 'Blah' };
+      const updateItem = { user: 'Blah' };
       return chai.request(app)
-        .put('/api/folders/NOT-A-VALID-ID').set('Authorization', `Bearer ${token}`)
+        .put('/api/drinks/NOT-A-VALID-ID').set('Authorization', `Bearer ${token}`)
         .send(updateItem)
         .then(res => {
           expect(res).to.have.status(400);
@@ -190,61 +200,27 @@ describe('Cocktail Buddy API - Drinks', function () {
       const updateItem = { name: 'Blah' };
       // The string "DOESNOTEXIST" is 12 bytes which is a valid Mongo ObjectId
       return chai.request(app)
-        .put('/api/folders/DOESNOTEXIST').set('Authorization', `Bearer ${token}`)
+        .put('/api/drinks/DOESNOTEXIST').set('Authorization', `Bearer ${token}`)
         .send(updateItem)
         .then(res => {
           expect(res).to.have.status(404);
         });
     });
-
-    it('should return an error when missing "name" field', function () {
-      const updateItem = {};
-      let data;
-      return Folder.findOne({ userId: user.id })
-        .then(_data => {
-          data = _data;
-          return chai.request(app).put(`/api/folders/${data.id}`).set('Authorization', `Bearer ${token}`).send(updateItem);
-        })
-        .then(res => {
-          expect(res).to.have.status(400);
-          expect(res).to.be.json;
-          expect(res.body).to.be.a('object');
-          expect(res.body.message).to.equal('Missing `name` in request body');
-        });
-    });
-
-    it('should return an error when given a duplicate name', function () {
-      return Folder.find({ userId: user.id }).limit(2)
-        .then(results => {
-          const [item1, item2] = results;
-          item1.name = item2.name;
-          return chai.request(app)
-            .put(`/api/folders/${item1.id}`).set('Authorization', `Bearer ${token}`)
-            .send(item1);
-        })
-        .then(res => {
-          expect(res).to.have.status(400);
-          expect(res).to.be.json;
-          expect(res.body).to.be.a('object');
-          expect(res.body.message).to.equal('Folder name already exists');
-        });
-    });
-
   });
 
-  describe('DELETE /api/folders/:id', function () {
+  describe('DELETE /api/drinks/:id', function () {
 
     it('should delete an existing document and respond with 204', function () {
       let data;
-      return Folder.findOne({ userId: user.id })
+      return Drink.findOne()
         .then(_data => {
           data = _data;
-          return chai.request(app).delete(`/api/folders/${data.id}`).set('Authorization', `Bearer ${token}`);
+          return chai.request(app).delete(`/api/drinks/${data.id}`).set('Authorization', `Bearer ${token}`);
         })
         .then(function (res) {
           expect(res).to.have.status(204);
           expect(res.body).to.be.empty;
-          return Folder.count({ _id: data.id });
+          return Drink.count({ _id: data.id });
         })
         .then(count => {
           expect(count).to.equal(0);
@@ -253,7 +229,7 @@ describe('Cocktail Buddy API - Drinks', function () {
 
     it('should respond with a 400 for an invalid id', function () {
       return chai.request(app)
-        .delete('/api/folders/NOT-A-VALID-ID').set('Authorization', `Bearer ${token}`)
+        .delete('/api/drinks/NOT-A-VALID-ID').set('Authorization', `Bearer ${token}`)
         .then(res => {
           expect(res).to.have.status(400);
           expect(res.body.message).to.equal('The `id` is not valid');

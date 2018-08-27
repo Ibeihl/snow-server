@@ -56,17 +56,24 @@ router.post('/', jwtAuth, (req, res, next) => {
     //     'instructions', 'user' ];
     // const missingField = requiredFields.find(field => !(field in req.body.newDrink));
 
-    // if (missingField) {
-    //     const err = new Error(`Missing '${missingField}' in request body`);
-    //     err.status = 422;
-    //     return next(err);
-    // }
+    if (!newDrink.name) {
+        const err = new Error(`Missing name in request body`);
+        err.status = 422;
+        return next(err);
+    }
 
     Drink.create(newDrink)
         .then(result => {
             res.location(`${req.originalUrl}/${result.id}`).status(201).json(result);
         })
-        .catch(err => next(err));
+        .catch(err => {
+            console.log(err)
+            if (err.code === 11000) {
+                err = new Error('Drink name already exists');
+                err.status = 400
+            }
+            next(err);
+        });
 
 })
 
