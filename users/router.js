@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const {User} = require('./models');
+const Quiver = require('../quivers/models');
 
 const router = express.Router();
 
@@ -132,6 +133,16 @@ router.post('/', jsonParser, (req, res) => {
       }
       res.status(500).json({code: 500, message: 'Internal server error'});
     });
+
+    Quiver.create({
+        username,
+        skiAreas: []
+    })
+    .then((quiver) => {
+      return res.json(quiver)
+    })
+    .catch(err => next(err));
+    
 });
 
 // Never expose all your users like below in a prod application
