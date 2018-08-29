@@ -10,6 +10,7 @@ const { dbConnect } = require('./db-mongoose');
 
 const { router: usersRouter } = require('./users');
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+const { router: quiverRouter } = require('./quivers')
 
 //create express app
 const app = express();
@@ -48,6 +49,7 @@ passport.use(jwtStrategy);
 //mount routers
 app.use('/api/users/', usersRouter);
 app.use('/api/auth/', authRouter);
+app.use('/api/quiver/', quiverRouter);
 // app.use(passport.authenticate('jwt', {session: false, failWithError: true }))
 
 // Custom 404 Not Found route handler
