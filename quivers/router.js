@@ -27,11 +27,20 @@ router.put('/:username', (req, res, next) => {
         update = {
             $push: {skiAreas: skiArea}
         }
+        console.log(update)
     } else if (action === "remove") {
         update = {
             $pull: { skiAreas: { $in: skiArea } }
         }
     }
+
+    // Quiver.find({ $and: [{username}, {skiAreas: skiArea}] })
+    //     .count()
+    //     .then(count => {
+    //         if(count){
+                
+    //         }
+    //     })
 
     Quiver.findOneAndUpdate({username}, update, {new: true})
         .then(userQuiver => {
